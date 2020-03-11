@@ -35,10 +35,13 @@ class Graph:
 
 class Node:
 
-    def __init__(self, p, owner):
-        self.uuid = str(uuid.uuid4())
+    def __init__(self, p, owner, uuid, name):
+
+        self.uuid = uuid
         self.p = p          # priority
         self.owner = owner
+        self.name = name
+        self.winner_region = -1
 
     def get_priority(self):
         return self.p
@@ -54,3 +57,18 @@ class Node:
 
     def get_uuid(self):
         return self.uuid
+
+    def set_uuid(self, uuid):
+        self.uuid = uuid
+
+    def get_name(self):
+        return self.name
+
+    def set_uuid(self, name):
+        self.name = name
+
+    def get_winner(self):
+        return self.winner_region
+
+    def set_winner(self, v):
+        self.winner_region = v

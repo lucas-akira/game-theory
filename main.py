@@ -1,67 +1,71 @@
 from tools import Graph, Node
+import argparse
 import sys
 sys.setrecursionlimit(5000)
 
+def main(input_file, output_file):
 
-def main():
-
-    # player 0: circular
-    # player 1: rectangular
+    # player 0: circular - even
+    # player 1: rectangular - odd
 
     # creating the graph from this webpage: https://en.wikipedia.org/wiki/Parity_game
+
+    even_nodes = []
+    odd_nodes = []
     G = Graph()
+    higher = -1
+    number = None
+    with open(input_file) as reader:
+        data = reader.read().splitlines(True)
+        number = data[0].split()
+        number = number[1]
+        number = number.replace(";", "")
+        data = data[1:]
+        for line in data:
+            uuid, p, owner, edges, name = line.split()
 
-    n1 = Node(1, 1)
-    n2 = Node(2, 1)
-    n3 = Node(0, 1)
-    n4 = Node(8, 1)
-    n5 = Node(4, 0)
-    n6 = Node(3, 0)
-    n7 = Node(5, 0)
-    n8 = Node(6, 0)
+            uuid = int(uuid)
+            p = int(p)
+            owner = int(owner)
+            name = name.replace("\"", "")
+            name = name.replace(";", "")
+            node = Node(p, owner, uuid, name)
 
-    odd_nodes = [n1.get_uuid(), n2.get_uuid(), n3.get_uuid(), n4.get_uuid()]
-    even_nodes = [n5.get_uuid(), n6.get_uuid(), n7.get_uuid(), n8.get_uuid()]
+            edges = edges.split(',')
+            G.insert_node(node)
 
-    G.insert_node(n1)
-    G.insert_node(n2)
-    G.insert_node(n3)
-    G.insert_node(n4)
-    G.insert_node(n5)
-    G.insert_node(n6)
-    G.insert_node(n7)
-    G.insert_node(n8)
+            for edge in edges:
+                edge = int(edge)
+                G.insert_edge(uuid, edge)
 
-    G.insert_edge(n1.get_uuid(), n5.get_uuid())
-    G.insert_edge(n1.get_uuid(), n8.get_uuid())
+            if owner % 2 == 0:
+                even_nodes.append(uuid)
+            else:
+                odd_nodes.append(uuid)
 
-    G.insert_edge(n5.get_uuid(), n1.get_uuid())
-    G.insert_edge(n5.get_uuid(), n3.get_uuid())
-
-    G.insert_edge(n3.get_uuid(), n1.get_uuid())
-    G.insert_edge(n3.get_uuid(), n6.get_uuid())
-
-    G.insert_edge(n6.get_uuid(), n2.get_uuid())
-
-    G.insert_edge(n2.get_uuid(), n3.get_uuid())
-    G.insert_edge(n2.get_uuid(), n7.get_uuid())
-
-    G.insert_edge(n7.get_uuid(), n4.get_uuid())
-
-    G.insert_edge(n4.get_uuid(), n7.get_uuid())
-    G.insert_edge(n4.get_uuid(), n2.get_uuid())
-
-    G.insert_edge(n8.get_uuid(), n1.get_uuid())
-    G.insert_edge(n8.get_uuid(), n4.get_uuid())
+            if p > higher:
+                higher = p
 
 
-    uuids = [n1.get_uuid(), n2.get_uuid(), n3.get_uuid(), n4.get_uuid(), n5.get_uuid(), n6.get_uuid(), n7.get_uuid(), n8.get_uuid()]
-    WE = solveE(G, even_nodes, odd_nodes, 8)
+    if higher % 2 == 1:
+        higher = higher + 1
+
+    WE = solveE(G, even_nodes, odd_nodes, higher)
+
+    nodes = G.get_nodes()
     for node in WE:
-        print(node.get_priority())
+        node.set_winner(0) # 0 means even player
 
-    #print(WE)
-    #print(uuids)
+    for node in nodes:
+        if node.get_winner() == -1:
+            node.set_winner(1) # 1 means odd player
+
+    with open(output_file, 'w') as writter:
+
+        writter.write("parity " + number + ";\n")
+        for node in nodes:
+            writter.write(str(node.get_uuid()) + " " + str(node.get_winner()) + "\n")
+
 
 def atr(G, player_nodes, U, num):
 
@@ -104,7 +108,6 @@ def atr(G, player_nodes, U, num):
 def solveE(G, even_nodes, odd_nodes, h):
 
     all_nodes = G.get_nodes()
-    print("SOLVE_E ", len(all_nodes), h)
     if len(all_nodes) == 0 or h < 0:
         return []
 
@@ -129,7 +132,6 @@ def solveE(G, even_nodes, odd_nodes, h):
 def solveO(G, even_nodes, odd_nodes, h):
 
     all_nodes = G.get_nodes()
-    print("SOLVE_O ", len(all_nodes), h)
     if len(all_nodes) == 0 or h < 0:
         return []
 
@@ -152,4 +154,14 @@ def solveO(G, even_nodes, odd_nodes, h):
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input", help="input file to run over the algorithm", nargs='+', required=True)
+    parser.add_argument("--output", help="output file to put the answer of the algorithm", nargs='+', required=True)
+
+    try:
+        args = parser.parse_args()
+    except:
+        parser.print_help(sys.stderr)
+        exit(1)
+
+    main(args.input[0], args.output[0])
