@@ -19,7 +19,7 @@ def get_text(name, remove=False):
 
 
 parser = ArgumentParser()
-parser.add_argument("--folder", help="folder with all the tests", nargs='+', required=True)
+parser.add_argument("--folder", help="test folder", nargs='+', required=True)
 
 try:
     args = parser.parse_args()
@@ -31,11 +31,17 @@ folder = args.folder[0]
 
 tests = os.listdir(folder)
 
+output_folder = "output/"
+
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+
+
 i = 0
 failed = []
 for test in tests:
-    os.system("pgsolver -global recursive --printsolonly " + folder + "/" + test + " > output/" + test[:-3] + "_pg.gm")
-    os.system("python3 zielonka.py --input " + folder + "/" + test + " --output output/" + test[:-3] + "_CS.gm")
+    os.system("pgsolver -global recursive --printsolonly " + folder + "/" + test + " > " + output_folder + test[:-3] + "_pg.gm")
+    os.system("python3 zielonka.py --input " + folder + "/" + test + " --output " + output_folder + test[:-3] + "_CS.gm")
 
 
     f1 = get_text("output/" + test[:-3] + "_pg.gm", True)
