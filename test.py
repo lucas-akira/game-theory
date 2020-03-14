@@ -3,6 +3,21 @@ import sys
 from argparse import ArgumentParser
 import pandas as pd
 
+def get_text(name, remove=False):
+
+    f = []
+    with open(name, 'r') as file:
+        for line in file.readlines()[1:]:
+            line = line.replace(";", "")
+            line = line.replace("\n", "")
+            line = line.split(" ")
+            if remove and len(line) == 3:
+                line = line[:-1]
+            f.append(line)
+
+    return f
+
+
 parser = ArgumentParser()
 parser.add_argument("--folder", help="folder with all the tests", nargs='+', required=True)
 
@@ -16,24 +31,24 @@ folder = args.folder[0]
 
 tests = os.listdir(folder)
 
+i = 0
+failed = []
 for test in tests:
     os.system("pgsolver -global recursive --printsolonly " + folder + "/" + test + " > output/" + test[:-3] + "_pg.gm")
-    os.system("python3 main.py --input " + folder + "/" + test + " --output output/" + test[:-3] + "_CS.gm")
-    data1 = pd.read_csv("output/" + test[:-3] + "_pg.gm")
-    data2 = pd.read_csv("output/" + test[:-3] + "_CS.gm")
-
-    data1 = data1.fillna(method='ffill')
-    data2 = data2.fillna(method='ffill')
-
-    #data1 = data1.to_csv(header=None, index=False)
-    #data2 = data2.to_csv(header=None, index=False)
+    os.system("python3 zielonka.py --input " + folder + "/" + test + " --output output/" + test[:-3] + "_CS.gm")
 
 
-    print(data1)
-    print(data2)
+    f1 = get_text("output/" + test[:-3] + "_pg.gm", True)
+    f2 = get_text("output/" + test[:-3] + "_CS.gm")
 
 
+    equal = f1 == f2
+    result = "PASSED" if equal else "FAILED"
 
+    print("TEST #" + str(i).zfill(4) + " - " + result)
 
+    if result == "FAILED":
+        failed.append(i)
+    i+=1
 
-
+print("FAILED: ", failed)

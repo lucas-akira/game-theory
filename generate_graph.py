@@ -3,12 +3,12 @@ from uuid import uuid4
 from argparse import ArgumentParser
 import sys
 
+max_size = 30
+
 def main(fname):
 
     with open(fname, 'w') as fout:
-        size = randrange(1, 7) # because of line number_of_edges = randrange(1, size),
-                                # there needs to be at least 2 vertexes, otherwise there's
-                                # no edge, and does it crash?
+        size = randrange(1, max_size)
 
         fout.write("parity " + str(size) + ";\n")
         for i in  range(size+1):

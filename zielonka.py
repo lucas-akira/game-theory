@@ -64,7 +64,7 @@ def main(input_file, output_file):
 
         writter.write("parity " + number + ";\n")
         for node in nodes:
-            writter.write(str(node.get_uuid()) + " " + str(node.get_winner()) + "\n")
+            writter.write(str(node.get_uuid()) + " " + str(node.get_winner()) + ";\n")
 
 
 def atr(G, player_nodes, U, num):
