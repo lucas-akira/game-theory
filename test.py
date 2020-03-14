@@ -41,11 +41,11 @@ i = 0
 failed = []
 for test in tests:
     os.system("pgsolver -global recursive --printsolonly " + folder + "/" + test + " > " + output_folder + test[:-3] + "_pg.gm")
-    os.system("python3 zielonka.py --input " + folder + "/" + test + " --output " + output_folder + test[:-3] + "_CS.gm")
+    os.system("python3 pawel_parys.py --input " + folder + "/" + test + " --output " + output_folder + test[:-3] + "_pp.gm")
 
 
     f1 = get_text("output/" + test[:-3] + "_pg.gm", True)
-    f2 = get_text("output/" + test[:-3] + "_CS.gm")
+    f2 = get_text("output/" + test[:-3] + "_pp.gm")
 
 
     equal = f1 == f2
