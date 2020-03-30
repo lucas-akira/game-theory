@@ -2,8 +2,7 @@
  
 Author - Gabriel Pellegrino da Silva
 
-
-## Scripts
+Contributor - Guilherme Lubk do Prado
 
 ### create_graphs.py
 
