@@ -71,7 +71,10 @@ def atr(G, player_nodes, U, num):
     all_nodes = G.get_nodes()
     not_changed = False
 
-    atr_nodes = [node.get_uuid() for node in U]
+    start_nodes = [node.get_uuid() for node in U]
+    atr_nodes = start_nodes
+
+    are_equal = True
 
     while not not_changed:
         changed = False
@@ -82,6 +85,7 @@ def atr(G, player_nodes, U, num):
                     if succ in atr_nodes:
                         if node.get_uuid() not in atr_nodes:
                             changed = True
+                            are_equal = False
                             atr_nodes.append(node.get_uuid())
                             break
 
@@ -94,14 +98,23 @@ def atr(G, player_nodes, U, num):
                         break
 
                 if all_of_them:
-
                     if node.get_uuid() not in atr_nodes:
                         changed = True
+                        are_equal = False
                         atr_nodes.append(node.get_uuid())
 
         not_changed = not(changed)
 
-    return atr_nodes
+    return atr_nodes, are_equal
+
+
+def contain_all(G, ATRE, h):
+
+    all_nodes = G.get_nodes()
+
+    Nh_1 = [node.get_uuid() for node in G.get_nodes() if node.get_priority() == h-1]
+
+    return Nh_1 <= ATRE
 
 
 def solveE(G, even_nodes, odd_nodes, h, pe, po):
@@ -112,40 +125,50 @@ def solveE(G, even_nodes, odd_nodes, h, pe, po):
 
     while True:
         Nh = [node for node in G.get_nodes() if node.get_priority() == h]
-        ATRE = atr(G, even_nodes, Nh, 0)
+        ATRE, _ = atr(G, even_nodes, Nh, 0)
+
+        if contain_all(G, ATRE, h):
+            Nh_2 = [node for node in G.get_nodes() if node.get_priority() == h-2]
+            Nh += Nh_2
+            ATRE, _ = atr(G, even_nodes, Nh, 0)
+
         nodes, edges = G.remove_nodes(ATRE)
 
         H = Graph(nodes, edges)
         WO = solveO(H, even_nodes, odd_nodes, h-1, po//2, pe)
-        ATRO = atr(G, odd_nodes, WO, 1)
+        ATRO, equal = atr(G, odd_nodes, WO, 1)
         nodes, edges = G.remove_nodes(ATRO)
         G = Graph(nodes, edges)
 
-        if len(WO) == 0:
-            # testing W0 emptiness
+        if equal:
+            # testing W0 == ATR0
             break
 
     Nh = [node for node in G.get_nodes() if node.get_priority() == h]
-    ATRE = atr(G, even_nodes, Nh, 0)
+    ATRE, _ = atr(G, even_nodes, Nh, 0)
     nodes, edges = G.remove_nodes(ATRE)
-
     H = Graph(nodes, edges)
+
     WO = solveO(H, even_nodes, odd_nodes, h-1, po, pe)
-    ATRO = atr(G, odd_nodes, WO, 1)
+    ATRO, equal = atr(G, odd_nodes, WO, 1)
     nodes, edges = G.remove_nodes(ATRO)
     G = Graph(nodes, edges)
 
-    while len(WO) != 0:
+    while not(equal):
         Nh = [node for node in G.get_nodes() if node.get_priority() == h]
-        ATRE = atr(G, even_nodes, Nh, 0)
+        ATRE, _ = atr(G, even_nodes, Nh, 0)
+        if contain_all(G, ATRE, h):
+            Nh_2 = [node for node in G.get_nodes() if node.get_priority() == h-2]
+            Nh += Nh_2
+            ATRE, _ = atr(G, even_nodes, Nh, 0)
+
         nodes, edges = G.remove_nodes(ATRE)
 
         H = Graph(nodes, edges)
         WO = solveO(H, even_nodes, odd_nodes, h-1, po//2, pe)
-        ATRO = atr(G, odd_nodes, WO, 1)
+        ATRO, equal = atr(G, odd_nodes, WO, 1)
         nodes, edges = G.remove_nodes(ATRO)
         G = Graph(nodes, edges)
-
 
     WE = G.get_nodes()
     return WE
@@ -158,34 +181,47 @@ def solveO(G, even_nodes, odd_nodes, h, po, pe):
 
     while True:
         Nh = [node for node in G.get_nodes() if node.get_priority() == h]
-        ATRO = atr(G, odd_nodes, Nh, 1)
+        ATRO, _ = atr(G, odd_nodes, Nh, 1)
+ 
+        if contain_all(G, ATRO, h):
+            Nh_2 = [node for node in G.get_nodes() if node.get_priority() == h-2]
+            Nh += Nh_2
+            ATRO, _ = atr(G, odd_nodes, Nh, 1)
+
         nodes, edges = G.remove_nodes(ATRO)
         H = Graph(nodes, edges)
         WE = solveE(H, even_nodes, odd_nodes, h-1, pe//2, po)
-        ATRE = atr(G, even_nodes, WE, 0)
+        ATRE, equal = atr(G, even_nodes, WE, 0)
         nodes, edges = G.remove_nodes(ATRE)
         G = Graph(nodes, edges)
 
-        if len(WE) == 0:
-            # testing W0 emptiness
+        if equal:
+            # testing WE == ATRE
             break
 
     Nh = [node for node in G.get_nodes() if node.get_priority() == h]
-    ATRO = atr(G, odd_nodes, Nh, 1)
+    ATRO, _ = atr(G, odd_nodes, Nh, 1)
     nodes, edges = G.remove_nodes(ATRO)
     H = Graph(nodes, edges)
+
     WE = solveE(H, even_nodes, odd_nodes, h-1, pe, po)
-    ATRE = atr(G, even_nodes, WE, 0)
+    ATRE, equal = atr(G, even_nodes, WE, 0)
     nodes, edges = G.remove_nodes(ATRE)
     G = Graph(nodes, edges)
 
-    while len(WE) != 0:
+    while not(equal):
         Nh = [node for node in G.get_nodes() if node.get_priority() == h]
-        ATRO = atr(G, odd_nodes, Nh, 1)
+        ATRO, _ = atr(G, odd_nodes, Nh, 1)
+ 
+        if contain_all(G, ATRO, h):
+            Nh_2 = [node for node in G.get_nodes() if node.get_priority() == h-2]
+            Nh += Nh_2
+            ATRO, _ = atr(G, odd_nodes, Nh, 1)
+
         nodes, edges = G.remove_nodes(ATRO)
         H = Graph(nodes, edges)
         WE = solveE(H, even_nodes, odd_nodes, h-1, pe//2, po)
-        ATRE = atr(G, even_nodes, WE, 0)
+        ATRE, equal = atr(G, even_nodes, WE, 0)
         nodes, edges = G.remove_nodes(ATRE)
         G = Graph(nodes, edges)
 
