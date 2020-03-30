@@ -1,9 +1,8 @@
 # Game theory project - CentraleSupélec
  
 Author - Gabriel Pellegrino da Silva
-Contributor - Guilherme Lubk do Prado
 
-## Scripts
+Contributor - Guilherme Lubk do Prado
 
 ### create_graphs.py
 
