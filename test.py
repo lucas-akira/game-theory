@@ -43,7 +43,7 @@ failed = []
 for method in methods:
     print("METHOD: " + method)
     for test in tests:
-        os.system("./pgsolver -global recursive --printsolonly " + folder + "/" + test + " > " + output_folder + test[:-3] + "_pg.gm")
+        os.system("pgsolver -global recursive --printsolonly " + folder + "/" + test + " > " + output_folder + test[:-3] + "_pg.gm")
         start_time = time.time()
         os.system("python3 " + method + ".py" + " --input " + folder + "/" + test + " --output " + output_folder + test[:-3] + "_pp.gm")
         elapsed_time = time.time() - start_time
