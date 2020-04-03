@@ -2,7 +2,8 @@
  
 Author - Gabriel Pellegrino da Silva
 
-Contributor - Guilherme Lubk do Prado\n
+Contributor - Guilherme Lubk do Prado
+
 	      Lucas Akira Morishita
 
 ## Graph Creation
