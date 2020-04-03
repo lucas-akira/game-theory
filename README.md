@@ -9,8 +9,7 @@ Contributor - Guilherme Lubk do Prado
 
 ### create\_graphs.py
 
-Run this script to create n random graphs and save it on a specific folder. This number n
-and this specific folder are hard-coded on this script.
+Run this script to create n random graphs and save it on a specific folder. You'll need to specify how many graphs do you intend to create (num\_graphs), how many nodes each graph will have (size), and how many connexions each node will have with its neighbours. The number of connexions per node is a random variable with probability distribution function: Uniform (unif), Poisson (poisson), and Heravy-Tail (heavy). Set this p. function by altering the "dist" parameter in the code. If you choose the Poisson p. function, specify the desired rate "lambda". The graphs will be store in a folder with the following name "test\_n\_num\_graphs\_dist\_choosenDist". If Poisson p. function has been choosen, the folder will be named "test\_n\_num\_graphs\_dist\_choosenDist\_lam\_choosenLambda".
 
 ### generate\_graph.py
 
