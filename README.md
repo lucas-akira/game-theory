@@ -2,7 +2,7 @@
  
 Author - Gabriel Pellegrino da Silva
 
-Contributor - Guilherme Lubk do Prado
+Contributors - Guilherme Lubk do Prado, Lucas Akira Morishita
 
 ### create_graphs.py
 
@@ -19,6 +19,7 @@ in a file.
 Run this script to call two solvers: the one developped by https://github.com/tcsprojects/pgsolver
 Note that you need to follow the instructions present there to be able to use it.
 The second solver is ours, fait maison.
+It tests each of the four proposed solutions for each graph created, counting the execution time, average time per method, and the best performing method for each graph, as well as determining the overall best method timewise.
 
 ### zielonka.py
 
