@@ -2,15 +2,15 @@
  
 Author - Gabriel Pellegrino da Silva
 
-Contributor - Guilherme Lubk do Prado
+Contributors - Guilherme Lubk do Prado, Lucas Akira Morishita
+
 	      Lucas Akira Morishita
 
 ## Graph Creation
 
 ### create\_graphs.py
 
-Run this script to create n random graphs and save it on a specific folder. This number n
-and this specific folder are hard-coded on this script.
+Run this script to create n random graphs and save it on a specific folder. You'll need to specify how many graphs do you intend to create (num\_graphs), how many nodes each graph will have (size), and how many connexions each node will have with its neighbours. The number of connexions per node is a random variable with probability distribution function: Uniform (unif), Poisson (poisson), and Heravy-Tail (heavy). Set this p. function by altering the "dist" parameter in the code. If you choose the Poisson p. function, specify the desired rate "lambda". The graphs will be store in a folder with the following name "test\_n\_num\_graphs\_dist\_choosenDist". If Poisson p. function has been choosen, the folder will be named "test\_n\_num\_graphs\_dist\_choosenDist\_lam\_choosenLambda".
 
 ### generate\_graph.py
 
@@ -28,6 +28,7 @@ This file contains classes to create a Graph and a Node
 Run this script to call two solvers: the one developped by https://github.com/tcsprojects/pgsolver
 Note that you need to follow the instructions present there to be able to use it.
 The second solver is ours, fait maison.
+It tests each of the four proposed solutions for each graph created, counting the execution time, average time per method, and the best performing method for each graph, as well as determining the overall best method timewise.
 
 
 ## Solvers
