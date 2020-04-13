@@ -60,3 +60,11 @@ A straightforward optimization is to decrease pO and pE to |G| at the beginning 
 ### op4\_pawel.py
 One can also observe that the call to SolveO in line 13 (with the full precision) gets the same subgame H as the last call to SolveO in line 8 (with decreased precision). 
 A very rough idea is to make someuse of the computations performed by the decreased-precision call during the full-precision call.
+
+### zielonka\_1.py
+
+Zielonka standard implementation with the same improvement as op1.
+
+### zielonka\_2.py
+
+Zielonka standard implementation with the same improvement as op2.
